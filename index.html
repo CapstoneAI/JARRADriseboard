@@ -167,7 +167,7 @@ async function loadData(){
     document.getElementById("holders").textContent = m.holders_count;
     if(m.token_image){
       document.getElementById("tokenImg").src = m.token_image;
-      if(ca === JARRAD_CA) document.getElementById("bannerImg").src = m.token_image;
+      document.getElementById("bannerImg").src = m.token_image;
     }
 
     const riseAddr = m.rise_market_address || ca;
@@ -188,7 +188,7 @@ async function loadData(){
       });
       if(tx.transactions.length < 100) hasMore = false;
       page++;
-      if(page > 20) break;
+      if(page > 5) break;
     }
 
     const supply = parseFloat(m.mayflower_token_supply) / Math.pow(10, m.token_decimals);
