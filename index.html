@@ -182,7 +182,7 @@ async function loadData() {
       if(ca === JARRAD_CA) document.getElementById("bannerImg").src = m.token_image;
     }
 
-    const mintAddress = m.mint_token || ca; const txData = await fetchAPI("/markets/"+mintAddress+"/transactions?limit=100&page="+page);
+    const mintAddress = m.rise_market_address || ca; const txData = await fetchAPI("/markets/"+mintAddress+"/transactions?limit=100&page="+page);
     const walletStats = {};
     if(txData.ok && txData.transactions) {
       txData.transactions.forEach(tx => {
