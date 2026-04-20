@@ -3,10 +3,12 @@ export default async function handler(req, res) {
   const url = req.query.url;
   if (!url) return res.status(400).end();
   try {
-    const r = await fetch(url);
+    const r = await fetch(decodeURIComponent(url));
     const buf = await r.arrayBuffer();
-    res.setHeader("Content-Type", r.headers.get("content-type") || "image/png");
-    res.send(Buffer.from(buf));
+    const ct = r.headers.get("content-type") || "image/png";
+    res.setHeader("Content-Type", ct);
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.end(Buffer.from(buf));
   } catch(e) {
     res.status(500).end();
   }
