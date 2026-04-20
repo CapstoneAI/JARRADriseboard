@@ -120,7 +120,7 @@
 <div class="footer">powered by <a href="https://x.com/jarradceorise" target="_blank">@jarradceorise</a></div>
 
 <script>
-const API = "https://api.allorigins.win/raw?url=https://public.rise.rich";
+const API = "/api/proxy?path=";
 const KEY = "fkv2e7h3c4l4k7y5";
 const JARRAD_CA = "G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise";
 const MIN_MCAP = 10000;
@@ -153,7 +153,7 @@ function soldClass(p) {
 }
 
 async function fetchAPI(path) {
-  const r = await fetch(API+path, { headers: { "x-api-key": KEY } });
+  const r = await fetch(API+encodeURIComponent(path), { headers: { "x-api-key": KEY } });
   return r.json();
 }
 
