@@ -5,64 +5,76 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JARRAD RiseBoard</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:linear-gradient(135deg,#f8d7c4 0%,#e8d5e8 50%,#c4c8e8 100%);min-height:100vh;font-family:'Segoe UI',sans-serif;color:#2a2a3e}
-  .header{text-align:center;padding:36px 20px 20px}
-  .header h1{font-size:28px;font-weight:700;color:#2a2a3e}
-  .header p{font-size:14px;color:#6b6b8a;margin-top:4px}
-  .header p span{color:#9945ff;font-weight:500}
-  .wrap{max-width:660px;margin:0 auto;padding:0 20px 60px}
-  .search-box{display:flex;gap:10px;margin-bottom:16px}
-  input{flex:1;background:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.8);border-radius:10px;padding:13px 16px;font-size:14px;color:#2a2a3e;outline:none}
-  input::placeholder{color:#9a9ab0}
-  input:focus{border-color:#9945ff88}
-  button{background:#9945ff;border:none;border-radius:10px;padding:13px 24px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
-  button:hover{background:#7c37cc}
-  button:disabled{background:#c4b0e0;cursor:not-allowed}
-  .banner{background:linear-gradient(90deg,#9945ff22,#c4c8e844);border:1px solid #9945ff44;border-radius:12px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
-  .banner-left{display:flex;align-items:center;gap:10px}
-  .banner-img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #9945ff44;background:#9945ff22}
-  .banner-name{font-size:13px;font-weight:600;color:#2a2a3e}
-  .banner-name span{color:#9945ff}
-  .banner-sub{font-size:11px;color:#8a8aaa;margin-top:2px}
-  .trade-btn{background:#9945ff;border:none;border-radius:8px;padding:8px 16px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap}
-  .token-card{background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:14px}
-  .token-img{width:50px;height:50px;border-radius:50%;object-fit:cover;background:#9945ff22;flex-shrink:0}
-  .token-name{font-size:17px;font-weight:700;color:#2a2a3e}
-  .token-sym{font-size:12px;color:#8a8aaa;margin-top:2px}
-  .token-stats{margin-left:auto;display:flex;gap:18px}
-  .stat{text-align:right}
-  .stat-label{font-size:11px;color:#8a8aaa}
-  .stat-val{font-size:14px;font-weight:600;color:#2a2a3e;margin-top:2px}
-  .stat-val.green{color:#1D9E75}
-  .stat-val.purple{color:#9945ff}
-  .refresh-bar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8a8aaa;margin-bottom:10px}
-  .refresh-btn{background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.8);border-radius:6px;padding:4px 12px;font-size:11px;color:#6b6b8a;cursor:pointer}
-  .table-head{display:grid;grid-template-columns:32px 1fr 90px 78px 80px 64px;gap:8px;padding:8px 14px;font-size:11px;color:#8a8aaa;text-transform:uppercase;letter-spacing:.05em}
-  .row{display:grid;grid-template-columns:32px 1fr 90px 78px 80px 64px;gap:8px;padding:12px 14px;background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.7);border-radius:10px;margin-bottom:6px;align-items:center;font-size:13px}
-  .rank{font-weight:700;color:#8a8aaa;font-size:12px}
-  .rank.gold{color:#B8860B}
-  .rank.silver{color:#708090}
-  .rank.bronze{color:#A0522D}
-  .wallet{font-family:monospace;font-size:11px;color:#5a5a7a}
-  .amount{font-weight:600;color:#2a2a3e;text-align:right}
-  .pct{text-align:right;color:#6b6b8a;font-size:12px}
-  .bar-wrap{height:3px;background:rgba(153,69,255,0.15);border-radius:2px;margin-top:3px}
-  .bar{height:3px;background:#9945ff;border-radius:2px}
-  .borrow{text-align:right;font-size:12px;font-weight:600;color:#7c37cc}
-  .borrow.none{color:#aaa;font-weight:400}
-  .sold{text-align:right;font-size:12px;font-weight:600}
-  .sold.green{color:#1D9E75}
-  .sold.yellow{color:#BA7517}
-  .sold.red{color:#A32D2D}
-  .load-more{text-align:center;margin-top:12px}
-  .load-btn{background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.8);border-radius:10px;padding:10px 28px;font-size:13px;color:#6b6b8a;cursor:pointer;display:inline-block}
-  .error-box{background:#fff0f0;border:1px solid #ffaaaa;border-radius:10px;padding:14px 16px;color:#A32D2D;font-size:14px;margin-bottom:12px;display:none}
-  .loading{text-align:center;padding:40px;color:#8a8aaa;display:none}
-  .spinner{width:32px;height:32px;border:3px solid rgba(153,69,255,0.2);border-top-color:#9945ff;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .footer{text-align:center;padding:20px;font-size:12px;color:#8a8aaa}
-  .footer a{color:#9945ff;text-decoration:none;font-weight:500}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#f8d7c4 0%,#e8d5e8 50%,#c4c8e8 100%);min-height:100vh;font-family:'Segoe UI',sans-serif;color:#2a2a3e}
+.header{text-align:center;padding:28px 20px 16px}
+.header h1{font-size:26px;font-weight:700;color:#2a2a3e}
+.header p{font-size:13px;color:#6b6b8a;margin-top:3px}
+.header p span{color:#9945ff;font-weight:500}
+.layout{display:grid;grid-template-columns:1fr 220px;gap:16px;max-width:920px;margin:0 auto;padding:0 16px 60px}
+.main{min-width:0}
+.search-box{display:flex;gap:8px;margin-bottom:14px}
+input{flex:1;background:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.8);border-radius:10px;padding:12px 14px;font-size:14px;color:#2a2a3e;outline:none}
+input::placeholder{color:#9a9ab0}
+input:focus{border-color:#9945ff88}
+button{background:#9945ff;border:none;border-radius:10px;padding:12px 22px;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+button:hover{background:#7c37cc}
+button:disabled{background:#c4b0e0;cursor:not-allowed}
+.token-card{background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.token-sq{width:46px;height:46px;border-radius:8px;background:#9945ff22;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#7c37cc;flex-shrink:0;overflow:hidden}
+.token-sq img{width:100%;height:100%;object-fit:cover}
+.token-name{font-size:16px;font-weight:700;color:#2a2a3e}
+.token-sym{font-size:11px;color:#8a8aaa;margin-top:2px}
+.token-stats{margin-left:auto;display:flex;gap:16px}
+.stat{text-align:right}
+.stat-label{font-size:10px;color:#8a8aaa}
+.stat-val{font-size:13px;font-weight:600;color:#2a2a3e;margin-top:2px}
+.stat-val.green{color:#1D9E75}
+.stat-val.purple{color:#9945ff}
+.refresh-bar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8a8aaa;margin-bottom:8px}
+.refresh-btn{background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.8);border-radius:6px;padding:3px 10px;font-size:11px;color:#6b6b8a;cursor:pointer}
+.table-head{display:grid;grid-template-columns:28px 1fr 82px 72px 74px 56px;gap:6px;padding:6px 12px;font-size:10px;color:#8a8aaa;text-transform:uppercase;letter-spacing:.05em}
+.row{display:grid;grid-template-columns:28px 1fr 82px 72px 74px 56px;gap:6px;padding:10px 12px;background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.7);border-radius:9px;margin-bottom:5px;align-items:center;font-size:12px}
+.rank{font-weight:700;color:#8a8aaa;font-size:11px}
+.rank.gold{color:#B8860B}
+.rank.silver{color:#708090}
+.rank.bronze{color:#A0522D}
+.wallet{font-family:monospace;font-size:10px;color:#5a5a7a}
+.amount{font-weight:600;color:#2a2a3e;text-align:right}
+.pct{text-align:right;color:#6b6b8a;font-size:11px}
+.bar-wrap{height:2px;background:rgba(153,69,255,0.15);border-radius:2px;margin-top:2px}
+.bar{height:2px;background:#9945ff;border-radius:2px}
+.borrow{text-align:right;font-size:11px;font-weight:600;color:#7c37cc}
+.borrow.none{color:#aaa;font-weight:400}
+.sold{text-align:right;font-size:11px;font-weight:600}
+.sold.green{color:#1D9E75}
+.sold.yellow{color:#BA7517}
+.sold.red{color:#A32D2D}
+.load-more{text-align:center;margin-top:10px}
+.load-btn{background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.8);border-radius:9px;padding:8px 24px;font-size:12px;color:#6b6b8a;cursor:pointer;display:inline-block}
+.error-box{background:#fff0f0;border:1px solid #ffaaaa;border-radius:10px;padding:12px 14px;color:#A32D2D;font-size:13px;margin-bottom:12px;display:none}
+.loading{text-align:center;padding:40px;color:#8a8aaa;display:none}
+.spinner{width:30px;height:30px;border:3px solid rgba(153,69,255,0.2);border-top-color:#9945ff;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sidebar{display:flex;flex-direction:column;gap:12px}
+.jarrad-card{background:rgba(255,255,255,0.65);border:1px solid rgba(153,69,255,0.3);border-radius:14px;overflow:hidden}
+.jarrad-photo{width:100%;height:150px;object-fit:cover;object-position:center top;display:block}
+.jarrad-body{padding:14px}
+.jarrad-name{font-size:15px;font-weight:700;color:#2a2a3e}
+.jarrad-sym{font-size:11px;color:#9945ff;margin-top:1px;margin-bottom:12px}
+.jarrad-stats{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.jarrad-stat{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.5);border-radius:7px}
+.jarrad-stat-label{font-size:11px;color:#8a8aaa}
+.jarrad-stat-val{font-size:12px;font-weight:600;color:#2a2a3e}
+.jarrad-stat-val.green{color:#1D9E75}
+.jarrad-stat-val.purple{color:#9945ff}
+.trade-btn{display:block;background:#9945ff;border-radius:9px;padding:9px;color:#fff;font-size:13px;font-weight:600;text-align:center;text-decoration:none;margin-bottom:10px}
+.trade-btn:hover{background:#7c37cc}
+.disclaimer{background:rgba(153,69,255,0.08);border:1px solid rgba(153,69,255,0.2);border-radius:9px;padding:9px 11px;font-size:11px;color:#6b6b8a;line-height:1.6;text-align:center}
+.disclaimer a{color:#9945ff;text-decoration:none;font-weight:500}
+.footer{text-align:center;padding:20px;font-size:11px;color:#8a8aaa}
+.footer a{color:#9945ff;text-decoration:none;font-weight:500}
+@media(max-width:640px){.layout{grid-template-columns:1fr}.sidebar{order:-1}}
 </style>
 </head>
 <body>
@@ -70,204 +82,203 @@
   <h1>JARRAD RiseBoard</h1>
   <p>Holder leaderboard for <span>rise.rich</span> tokens</p>
 </div>
-<div class="wrap">
-  <div class="search-box">
-    <input type="text" id="caInput" placeholder="Paste token CA address..."/>
-    <button id="searchBtn" onclick="doSearch()">Search</button>
+<div class="layout">
+  <div class="main">
+    <div class="search-box">
+      <input type="text" id="caInput" placeholder="Paste any rise.rich token CA..."/>
+      <button id="searchBtn" onclick="doSearch()">Search</button>
+    </div>
+    <div class="error-box" id="errorBox"></div>
+    <div class="loading" id="loading"><div class="spinner"></div>Loading holders...</div>
+    <div id="tokenInfo" style="display:none">
+      <div class="token-card">
+        <div class="token-sq"><img id="tokenImg" src="" alt="" onerror="this.style.display='none'"/></div>
+        <div>
+          <div class="token-name" id="tokenName">—</div>
+          <div class="token-sym" id="tokenSym">—</div>
+        </div>
+        <div class="token-stats">
+          <div class="stat"><div class="stat-label">Floor</div><div class="stat-val green" id="floor">—</div></div>
+          <div class="stat"><div class="stat-label">Mkt Cap</div><div class="stat-val" id="mcap">—</div></div>
+          <div class="stat"><div class="stat-label">Holders</div><div class="stat-val purple" id="holders">—</div></div>
+        </div>
+      </div>
+      <div class="refresh-bar">
+        <span id="refreshCountdown">Refreshing in 60s...</span>
+        <div class="refresh-btn" onclick="loadData()">Refresh now</div>
+      </div>
+      <div class="table-head">
+        <div>#</div><div>Wallet</div>
+        <div style="text-align:right">Tokens</div>
+        <div style="text-align:right">% Supply</div>
+        <div style="text-align:right">Borrow</div>
+        <div style="text-align:right">Sold</div>
+      </div>
+      <div id="leaderboard"></div>
+      <div class="load-more" id="loadMoreWrap" style="display:none">
+        <div class="load-btn" onclick="loadMore()">Load more (<span id="remaining">0</span> remaining)</div>
+      </div>
+    </div>
   </div>
-  <div class="banner">
-    <div class="banner-left">
-      <img id="bannerImg" class="banner-img" src="" alt="J" onerror="this.style.display='none'"/>
-      <div>
-        <div class="banner-name"><span>$JARRAD</span> — currently viewing</div>
-        <div class="banner-sub">powered by <a href="https://x.com/jarradceorise" style="color:#9945ff;text-decoration:none;">@jarradceorise</a></div>
+  <div class="sidebar">
+    <div class="jarrad-card">
+      <img class="jarrad-photo" src="https://i.imgur.com/iic5bON.jpg" alt="Jarrad"/>
+      <div class="jarrad-body">
+        <div class="jarrad-name">JARRAD</div>
+        <div class="jarrad-sym">$JARRAD · rise.rich</div>
+        <div class="jarrad-stats">
+          <div class="jarrad-stat"><span class="jarrad-stat-label">Price</span><span class="jarrad-stat-val" id="jPrice">—</span></div>
+          <div class="jarrad-stat"><span class="jarrad-stat-label">Floor</span><span class="jarrad-stat-val green" id="jFloor">—</span></div>
+          <div class="jarrad-stat"><span class="jarrad-stat-label">Mkt Cap</span><span class="jarrad-stat-val" id="jMcap">—</span></div>
+          <div class="jarrad-stat"><span class="jarrad-stat-label">Holders</span><span class="jarrad-stat-val purple" id="jHolders">—</span></div>
+        </div>
+        <a class="trade-btn" href="https://rise.rich/trade/G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise" target="_blank">Trade $JARRAD →</a>
+        <div class="disclaimer">Enjoyed the tool? Join the JARRAD community 🐸<br>
+          <a href="https://x.com/jarradceorise" target="_blank">X</a> · <a href="https://t.me/jarradceorise" target="_blank">Telegram</a>
+        </div>
       </div>
-    </div>
-    <a class="trade-btn" href="https://rise.rich/trade/G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise" target="_blank">Trade $JARRAD →</a>
-  </div>
-  <div class="error-box" id="errorBox"></div>
-  <div class="loading" id="loading"><div class="spinner"></div>Loading holders...</div>
-  <div id="tokenInfo" style="display:none">
-    <div class="token-card">
-      <img id="tokenImg" class="token-img" src="" alt="" onerror="this.style.display='none'"/>
-      <div>
-        <div class="token-name" id="tokenName">—</div>
-        <div class="token-sym" id="tokenSym">—</div>
-      </div>
-      <div class="token-stats">
-        <div class="stat"><div class="stat-label">Floor</div><div class="stat-val green" id="floor">—</div></div>
-        <div class="stat"><div class="stat-label">Market Cap</div><div class="stat-val" id="mcap">—</div></div>
-        <div class="stat"><div class="stat-label">Holders</div><div class="stat-val purple" id="holders">—</div></div>
-      </div>
-    </div>
-    <div class="refresh-bar">
-      <span id="refreshCountdown">Refreshing in 60s...</span>
-      <div class="refresh-btn" onclick="loadData()">Refresh now</div>
-    </div>
-    <div class="table-head">
-      <div>#</div><div>Wallet</div>
-      <div style="text-align:right">Tokens</div>
-      <div style="text-align:right">% Supply</div>
-      <div style="text-align:right">Borrow</div>
-      <div style="text-align:right">Sold</div>
-    </div>
-    <div id="leaderboard"></div>
-    <div class="load-more" id="loadMoreWrap" style="display:none">
-      <div class="load-btn" onclick="loadMore()">Load more (<span id="remaining">0</span> remaining)</div>
     </div>
   </div>
 </div>
 <div class="footer">powered by <a href="https://x.com/jarradceorise" target="_blank">@jarradceorise</a></div>
 <script>
-const PROXY = "/api/proxy?path=";
-const KEY = "fkv2e7h3c4l4k7y5";
-const JARRAD_CA = "G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise";
-const MIN_MCAP = 1000;
-const PAGE_SIZE = 20;
-let currentCA = "";
-let allHolders = [];
-let shownCount = 0;
-let refreshTimer = null;
-let countdown = 60;
+const PROXY="/api/proxy?path=";
+const JARRAD_CA="G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise";
+const MIN_MCAP=1000;
+const PAGE_SIZE=20;
+let currentCA="";
+let allHolders=[];
+let shownCount=0;
+let refreshTimer=null;
+let countdown=60;
 
-function fmt(n){
-  if(n>=1000000) return (n/1000000).toFixed(2)+"M";
-  if(n>=1000) return (n/1000).toFixed(1)+"K";
-  return parseFloat(n).toFixed(0);
-}
-function fmtUsd(n){ return "$"+parseFloat(n).toLocaleString("en",{maximumFractionDigits:0}); }
-function shortW(w){ return w.slice(0,4)+"..."+w.slice(-4); }
-function rankCls(i){ if(i===0)return "gold"; if(i===1)return "silver"; if(i===2)return "bronze"; return ""; }
-function soldCls(p){ if(p<=10)return "green"; if(p<=50)return "yellow"; return "red"; }
+function fmt(n){if(n>=1000000)return(n/1000000).toFixed(2)+"M";if(n>=1000)return(n/1000).toFixed(1)+"K";return parseFloat(n).toFixed(0)}
+function fmtUsd(n){return"$"+parseFloat(n).toLocaleString("en",{maximumFractionDigits:0})}
+function shortW(w){return w.slice(0,4)+"..."+w.slice(-4)}
+function rankCls(i){if(i===0)return"gold";if(i===1)return"silver";if(i===2)return"bronze";return""}
+function soldCls(p){if(p<=10)return"green";if(p<=50)return"yellow";return"red"}
 
 async function api(path){
-  const r = await fetch(PROXY + encodeURIComponent(path));
+  const r=await fetch(PROXY+encodeURIComponent(path));
   return r.json();
 }
 
+async function loadJarrad(){
+  try{
+    const mkt=await api("/markets/"+JARRAD_CA);
+    if(!mkt.ok)return;
+    const m=mkt.market;
+    document.getElementById("jPrice").textContent="$"+parseFloat(m.price).toFixed(6);
+    document.getElementById("jFloor").textContent="$"+parseFloat(m.mayflower_floor).toFixed(6);
+    document.getElementById("jMcap").textContent=fmtUsd(m.market_cap_usd);
+    document.getElementById("jHolders").textContent=m.holders_count;
+  }catch(e){}
+}
+
 async function loadData(){
-  const ca = currentCA;
-  document.getElementById("errorBox").style.display = "none";
-  document.getElementById("loading").style.display = "block";
-  document.getElementById("tokenInfo").style.display = "none";
-  document.getElementById("leaderboard").innerHTML = "";
-  shownCount = 0;
-  allHolders = [];
-
-  try {
-    const mkt = await api("/markets/"+ca);
-    if(!mkt.ok) throw new Error(mkt.error || "Token not found");
-    const m = mkt.market;
-    if(parseFloat(m.market_cap_usd) < MIN_MCAP) throw new Error("Market cap below $10,000");
-
-    document.getElementById("tokenName").textContent = m.token_name;
-    document.getElementById("tokenSym").textContent = "$"+m.token_symbol+" · rise.rich";
-    document.getElementById("floor").textContent = "$"+parseFloat(m.mayflower_floor).toFixed(6);
-    document.getElementById("mcap").textContent = fmtUsd(m.market_cap_usd);
-    document.getElementById("holders").textContent = m.holders_count;
-    if(m.token_image){
-      document.getElementById("tokenImg").src = "/api/img?url="+encodeURIComponent(m.token_image); document.getElementById("bannerImg").src = "/api/img?url="+encodeURIComponent(m.token_image);
-      document.getElementById("bannerImg").src = m.token_image;
-    }
-
-    const riseAddr = m.rise_market_address || ca;
-    const ws = {};
-    let page = 1;
-    let hasMore = true;
+  const ca=currentCA;
+  document.getElementById("errorBox").style.display="none";
+  document.getElementById("loading").style.display="block";
+  document.getElementById("tokenInfo").style.display="none";
+  document.getElementById("leaderboard").innerHTML="";
+  shownCount=0;
+  allHolders=[];
+  try{
+    const mkt=await api("/markets/"+ca);
+    if(!mkt.ok)throw new Error(mkt.error||"Token not found");
+    const m=mkt.market;
+    if(parseFloat(m.market_cap_usd)<MIN_MCAP)throw new Error("Market cap below $1,000");
+    document.getElementById("tokenName").textContent=m.token_name;
+    document.getElementById("tokenSym").textContent="$"+m.token_symbol+" · rise.rich";
+    document.getElementById("floor").textContent="$"+parseFloat(m.mayflower_floor).toFixed(6);
+    document.getElementById("mcap").textContent=fmtUsd(m.market_cap_usd);
+    document.getElementById("holders").textContent=m.holders_count;
+    if(m.token_image)document.getElementById("tokenImg").src="/api/img?url="+encodeURIComponent(m.token_image);
+    const riseAddr=m.rise_market_address||ca;
+    const ws={};
+    let page=1,hasMore=true;
     while(hasMore){
-      const tx = await api("/markets/"+riseAddr+"/transactions?limit=100&page="+page);
-      if(!tx.ok || !tx.transactions || tx.transactions.length === 0) break;
-      tx.transactions.forEach(t => {
-        const w = t.wallet_address;
-        if(!ws[w]) ws[w] = {bought:0, sold:0, borrow:0};
-        const amt = parseFloat(t.amount_received||0);
-        const put = parseFloat(t.amount_put||0);
-        if(t.transaction_type==="buy") ws[w].bought += amt / 1e9;
-        if(t.transaction_type==="sell") ws[w].sold += parseFloat(t.amount_received||0) / 1e9;
-        if(t.transaction_type==="borrow") ws[w].borrow += put;
+      const tx=await api("/markets/"+riseAddr+"/transactions?limit=100&page="+page);
+      if(!tx.ok||!tx.transactions||tx.transactions.length===0)break;
+      tx.transactions.forEach(t=>{
+        const w=t.wallet_address;
+        if(!ws[w])ws[w]={bought:0,sold:0,borrow:0};
+        if(t.transaction_type==="buy")ws[w].bought+=parseFloat(t.amount_received||0)/1e9;
+        if(t.transaction_type==="sell")ws[w].sold+=parseFloat(t.amount_received||0)/1e9;
+        if(t.transaction_type==="borrow")ws[w].borrow+=parseFloat(t.amount_put||0);
       });
-      if(tx.transactions.length < 100) hasMore = false;
+      if(tx.transactions.length<100)hasMore=false;
       page++;
-      if(page > 5) break;
+      if(page>5)break;
     }
-
-    const supply = parseFloat(m.mayflower_token_supply) / Math.pow(10, m.token_decimals);
-    allHolders = Object.keys(ws).map(w => {
-      const s = ws[w];
-      const tokens = Math.max(0, s.bought - s.sold);
-      const soldPct = s.bought > 0 ? Math.round((s.sold/s.bought)*100) : 0;
-      const borrowSol = s.borrow > 0 ? (s.borrow/1e9).toFixed(2) : null;
-      const pct = supply > 0 ? (tokens/supply*100) : 0;
-      return {wallet:w, tokens, soldPct, borrowSol, pct};
-    }).filter(h => h.tokens > 0).sort((a,b) => b.tokens - a.tokens);
-
+    const supply=parseFloat(m.mayflower_token_supply)/Math.pow(10,m.token_decimals||9);
+    allHolders=Object.keys(ws).map(w=>{
+      const s=ws[w];
+      const tokens=Math.max(0,s.bought-s.sold);
+      const soldPct=s.bought>0?Math.round((s.sold/s.bought)*100):0;
+      const borrowSol=s.borrow>0?(s.borrow/1e9).toFixed(2):null;
+      return{wallet:w,tokens,soldPct,borrowSol,pct:supply>0?(tokens/supply*100):0};
+    }).filter(h=>h.tokens>0).sort((a,b)=>b.tokens-a.tokens);
     renderRows(PAGE_SIZE);
-    document.getElementById("tokenInfo").style.display = "block";
+    document.getElementById("tokenInfo").style.display="block";
     startCountdown();
-  } catch(e){
-    document.getElementById("errorBox").textContent = "Error: "+e.message;
-    document.getElementById("errorBox").style.display = "block";
-  } finally {
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("searchBtn").disabled = false;
+  }catch(e){
+    document.getElementById("errorBox").textContent="Error: "+e.message;
+    document.getElementById("errorBox").style.display="block";
+  }finally{
+    document.getElementById("loading").style.display="none";
+    document.getElementById("searchBtn").disabled=false;
   }
 }
 
 function renderRows(count){
-  const board = document.getElementById("leaderboard");
-  const maxT = allHolders[0]?.tokens || 1;
-  const end = Math.min(shownCount + count, allHolders.length);
-  for(let i = shownCount; i < end; i++){
-    const h = allHolders[i];
-    const barW = Math.round((h.tokens/maxT)*100);
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `
+  const board=document.getElementById("leaderboard");
+  const maxT=allHolders[0]?.tokens||1;
+  const end=Math.min(shownCount+count,allHolders.length);
+  for(let i=shownCount;i<end;i++){
+    const h=allHolders[i];
+    const barW=Math.round((h.tokens/maxT)*100);
+    const row=document.createElement("div");
+    row.className="row";
+    row.innerHTML=`
       <div class="rank ${rankCls(i)}">${i+1}</div>
       <div class="wallet" title="${h.wallet}">${shortW(h.wallet)}</div>
       <div class="amount">${fmt(h.tokens)}</div>
       <div class="pct">${h.pct.toFixed(2)}%<div class="bar-wrap"><div class="bar" style="width:${barW}%"></div></div></div>
-      <div class="borrow ${h.borrowSol?'':'none'}">${h.borrowSol ? h.borrowSol+" SOL" : "—"}</div>
+      <div class="borrow ${h.borrowSol?'':'none'}">${h.borrowSol?h.borrowSol+" SOL":"—"}</div>
       <div class="sold ${soldCls(h.soldPct)}">${h.soldPct}%</div>
     `;
     board.appendChild(row);
   }
-  shownCount = end;
-  const rem = allHolders.length - shownCount;
-  document.getElementById("remaining").textContent = rem;
-  document.getElementById("loadMoreWrap").style.display = rem > 0 ? "block" : "none";
+  shownCount=end;
+  const rem=allHolders.length-shownCount;
+  document.getElementById("remaining").textContent=rem;
+  document.getElementById("loadMoreWrap").style.display=rem>0?"block":"none";
 }
 
-function loadMore(){ renderRows(PAGE_SIZE); }
+function loadMore(){renderRows(PAGE_SIZE)}
 
 function startCountdown(){
-  if(refreshTimer) clearInterval(refreshTimer);
-  countdown = 60;
-  refreshTimer = setInterval(() => {
+  if(refreshTimer)clearInterval(refreshTimer);
+  countdown=60;
+  refreshTimer=setInterval(()=>{
     countdown--;
-    document.getElementById("refreshCountdown").textContent = "Refreshing in "+countdown+"s...";
-    if(countdown <= 0){ countdown = 60; loadData(); }
-  }, 1000);
+    document.getElementById("refreshCountdown").textContent="Refreshing in "+countdown+"s...";
+    if(countdown<=0){countdown=60;loadData();}
+  },1000);
 }
 
 function doSearch(){
-  const ca = document.getElementById("caInput").value.trim();
-  if(!ca) return;
-  currentCA = ca;
-  document.getElementById("searchBtn").disabled = true;
-  if(refreshTimer) clearInterval(refreshTimer);
+  const ca=document.getElementById("caInput").value.trim();
+  if(!ca)return;
+  currentCA=ca;
+  document.getElementById("searchBtn").disabled=true;
+  if(refreshTimer)clearInterval(refreshTimer);
   loadData();
 }
 
-document.getElementById("caInput").addEventListener("keydown", e => {
-  if(e.key === "Enter") doSearch();
-});
-
-window.onload = () => {
-  currentCA = JARRAD_CA;
-  document.getElementById("caInput").value = JARRAD_CA;
-  loadData();
-};
+document.getElementById("caInput").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch()});
+window.onload=()=>loadJarrad();
 </script>
 </body>
 </html>
