@@ -182,7 +182,7 @@ async function loadData() {
       if(ca === JARRAD_CA) document.getElementById("bannerImg").src = m.token_image;
     }
 
-    const mintAddress = m.rise_market_address || ca; const txData = await fetchAPI("/markets/"+mintAddress+"/transactions?limit=100&page="+page);
+    const mintAddress = m.rise_market_address || ca; let page = 1; let hasMore = true; const walletStats = {}; while(hasMore) { const txData = await fetchAPI("/markets/"+mintAddress+"/transactions?limit=100&page="+page); if(!txData.ok || !txData.transactions || txData.transactions.length === 0) break; txData.transactions.forEach(tx => { const w = tx.wallet_address; if(!walletStats[w]) walletStats[w] = { bought: 0, sold: 0, borrow: 0 }; const amt = parseFloat(tx.amount_received || 0); const put = parseFloat(tx.amount_put || 0); if(tx.transaction_type === "buy") walletStats[w].bought += amt; if(tx.transaction_type === "sell") walletStats[w].sold += put; if(tx.transaction_type === "borrow") walletStats[w].borrow += put; }); if(txData.transactions.length < 100) hasMore = false; page++; }
     const walletStats = {};
     if(txData.ok && txData.transactions) {
       txData.transactions.forEach(tx => {
