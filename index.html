@@ -183,7 +183,7 @@ async function loadData(){
         const amt = parseFloat(t.amount_received||0);
         const put = parseFloat(t.amount_put||0);
         if(t.transaction_type==="buy") ws[w].bought += amt / 1e9;
-        if(t.transaction_type==="sell") ws[w].sold += put;
+        if(t.transaction_type==="sell") ws[w].sold += parseFloat(t.amount_received||0) / 1e9;
         if(t.transaction_type==="borrow") ws[w].borrow += put;
       });
       if(tx.transactions.length < 100) hasMore = false;
