@@ -166,7 +166,7 @@ async function loadData(){
     document.getElementById("mcap").textContent = fmtUsd(m.market_cap_usd);
     document.getElementById("holders").textContent = m.holders_count;
     if(m.token_image){
-      document.getElementById("tokenImg").src = m.token_image;
+      document.getElementById("tokenImg").src = "/api/img?url="+encodeURIComponent(m.token_image); document.getElementById("bannerImg").src = "/api/img?url="+encodeURIComponent(m.token_image);
       document.getElementById("bannerImg").src = m.token_image;
     }
 
