@@ -196,7 +196,7 @@ async function loadData() {
       });
     }
 
-    const holdersData = await fetchAPI("/users/portfolio");
+    
     const txList = txData.transactions || [];
     const uniqueWallets = [...new Set(txList.map(t => t.wallet_address))];
 
