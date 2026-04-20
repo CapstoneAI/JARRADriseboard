@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  const { path } = req.query;
+  const path = req.query.path;
   if (!path) return res.status(400).json({ ok: false, error: "no path" });
   const url = "https://public.rise.rich" + path;
   try {
