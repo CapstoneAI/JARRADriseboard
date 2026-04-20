@@ -197,8 +197,8 @@ async function loadData() {
     }
 
     
-    const txList = txData.transactions || [];
-    const uniqueWallets = [...new Set(txList.map(t => t.wallet_address))];
+    const txList = Object.keys(walletStats);
+    const uniqueWallets = Object.keys(walletStats);
 
     const supply = parseFloat(m.mayflower_token_supply) / Math.pow(10, m.token_decimals);
     allHolders = uniqueWallets.map(w => {
