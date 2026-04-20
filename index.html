@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RiseBoard — Holder Leaderboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #fff; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+  .header { text-align: center; padding: 40px 20px 20px; }
+  .header img { width: 72px; height: 72px; border-radius: 50%; margin-bottom: 12px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; }
+  .header p { color: #888; font-size: 14px; margin-top: 6px; }
+  .powered { color: #9945ff; font-weight: 600; }
+  .search-wrap { max-width: 600px; margin: 30px auto; padding: 0 20px; }
+  .search-box { display: flex; gap: 10px; }
+  input { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 14px 16px; color: #fff; font-size: 14px; outline: none; }
+  input:focus { border-color: #9945ff; }
+  input::placeholder { color: #555; }
+  button { background: #9945ff; border: none; border-radius: 10px; padding: 14px 24px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  button:hover { background: #7c37cc; }
+  button:disabled { background: #444; cursor: not-allowed; }
+  .token-info { max-width: 600px; margin: 0 auto 24px; padding: 0 20px; display: none; }
+  .token-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+  .token-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #333; }
+  .token-name { font-size: 18px; font-weight: 700; }
+  .token-symbol { font-size: 13px; color: #888; margin-top: 2px; }
+  .token-stats { margin-left: auto; text-align: right; }
+  .stat-label { font-size: 11px; color: #666; }
+  .stat-value { font-size: 14px; font-weight: 600; color: #9945ff; }
+  .floor-value { color: #00c896; }
+  .table-wrap { max-width: 600px; margin: 0 auto; padding: 0 20px 40px; display: none; }
+  .table-header { display: grid; grid-template-columns: 40px 1fr 120px 80px; gap: 10px; padding: 10px 16px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .row { display: grid; grid-template-columns: 40px 1fr 120px 80px; gap: 10px; padding: 14px 16px; background: #1a1a1a; border: 1px solid #222; border-radius: 10px; margin-bottom: 8px; align-items: center; font-size: 14px; transition: border-color 0.2s; }
+  .row:hover { border-color: #9945ff44; }
+  .rank { font-weight: 700; color: #666; font-size: 13px; }
+  .rank.gold { color: #ffd700; }
+  .rank.silver { color: #c0c0c0; }
+  .rank.bronze { color: #cd7f32; }
+  .wallet { font-family: monospace; font-size: 12px; color: #aaa; }
+  .amount { font-weight: 600; text-align: right; }
+  .percent { text-align: right; }
+  .percent-bar-wrap { margin-top: 4px; height: 3px; background: #333; border-radius: 2px; }
+  .percent-bar { height: 3px; background: #9945ff; border-radius: 2px; }
+  .error { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+  .error-box { background: #1a0a0a; border: 1px solid #ff4444; border-radius: 10px; padding: 16px; color: #ff8888; font-size: 14px; display: none; }
+  .loading { text-align: center; padding: 40px; color: #666; display: none; }
+  .spinner { width: 32px; height: 32px; border: 3px solid #333; border-top-color: #9945ff; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .jarrad-tag { text-align: center; padding: 10px; color: #444; font-size: 12px; }
+  .jarrad-tag span { color: #9945ff; }
+</style>
+</head>
+<body>
 
+<div class="header">
+  <h1>🐸 RiseBoard</h1>
+  <p>Holder leaderboard for <span class="powered">rise.rich</span> tokens</p>
+</div>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <input type="text" id="caInput" placeholder="Paste token CA address..." />
+    <button id="searchBtn" onclick="search()">Search</button>
+  </div>
+</div>
+
+<div class="error"><div class="error-box" id="errorBox"></div></div>
+<div class="loading" id="loading"><div class="spinner"></div>Loading holders...</div>
+
+<div class="token-info" id="tokenInfo">
+  <div class="token-card">
+    <img id="tokenImg" class="token-img" src="" alt="" onerror="this.style.display='none'" />
+    <div>
+      <div class="token-name" id="tokenName">—</div>
+      <div class="token-symbol" id="tokenSymbol">—</div>
+    </div>
+    <div class="token-stats">
+      <div class="stat-label">Floor Price</div>
+      <div class="stat-value floor-value" id="floorPrice">—</div>
+      <div class="stat-label" style="margin-top:6px">Holders</div>
+      <div class="stat-value" id="holdersCount">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="table-wrap" id="tableWrap">
+  <div class="table-header">
+    <div>#</div>
+    <div>Wallet</div>
+    <div style="text-align:right">Tokens</div>
+    <div style="text-align:right">% Supply</div>
+  </div>
+  <div id="leaderboard"></div>
+</div>
+
+<div class="jarrad-tag">built for <span>rise.rich</span> by 🐸 jarrad</div>
+
+<script>
+const RPC = "https://api.mainnet-beta.solana.com";
+const RISE_API = "https://public.rise.rich";
+
+function shortWallet(w) {
+  return w.slice(0, 4) + "..." + w.slice(-4);
+}
+
+function formatNumber(n) {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(1) + "K";
+  return n.toFixed(0);
+}
+
+function rankColor(i) {
+  if (i === 0) return "gold";
+  if (i === 1) return "silver";
+  if (i === 2) return "bronze";
+  return "";
+}
+
+async function search() {
+  const ca = document.getElementById("caInput").value.trim();
+  if (!ca) return;
+
+  document.getElementById("errorBox").style.display = "none";
+  document.getElementById("tokenInfo").style.display = "none";
+  document.getElementById("tableWrap").style.display = "none";
+  document.getElementById("leaderboard").innerHTML = "";
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("searchBtn").disabled = true;
+
+  try {
+    // Fetch token info from RISE API
+    let tokenData = null;
+    try {
+      const res = await fetch(`${RISE_API}/markets/${ca}`);
+      const json = await res.json();
+      if (json.ok && json.market) tokenData = json.market;
+    } catch(e) {}
+
+    // Fetch top holders from Solana RPC
+    const rpcRes = await fetch(RPC, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 1,
+        method: "getTokenLargestAccounts",
+        params: [ca]
+      })
+    });
+    const rpcJson = await rpcRes.json();
+
+    if (!rpcJson.result || !rpcJson.result.value) throw new Error("Token not found or invalid CA");
+
+    const holders = rpcJson.result.value;
+    if (holders.length === 0) throw new Error("No holders found");
+
+    // Calculate total supply
+    const totalSupply = holders.reduce((sum, h) => sum + parseFloat(h.uiAmount || 0), 0);
+
+    // Show token info
+    if (tokenData) {
+      document.getElementById("tokenName").textContent = tokenData.token_name || "—";
+      document.getElementById("tokenSymbol").textContent = "$" + (tokenData.token_symbol || "—");
+      document.getElementById("floorPrice").textContent = parseFloat(tokenData.mayflower_floor).toFixed(6);
+      document.getElementById("holdersCount").textContent = tokenData.holders_count || holders.length;
+      if (tokenData.token_image) document.getElementById("tokenImg").src = tokenData.token_image;
+      document.getElementById("tokenInfo").style.display = "block";
+    }
+
+    // Build leaderboard
+    const board = document.getElementById("leaderboard");
+    const maxAmount = parseFloat(holders[0].uiAmount || 0);
+
+    holders.forEach((h, i) => {
+      const amount = parseFloat(h.uiAmount || 0);
+      const pct = totalSupply > 0 ? ((amount / totalSupply) * 100).toFixed(2) : "0.00";
+      const barWidth = maxAmount > 0 ? ((amount / maxAmount) * 100).toFixed(1) : 0;
+
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <div class="rank ${rankColor(i)}">${i + 1}</div>
+        <div class="wallet" title="${h.address}">${shortWallet(h.address)}</div>
+        <div class="amount">${formatNumber(amount)}</div>
+        <div class="percent">
+          ${pct}%
+          <div class="percent-bar-wrap"><div class="percent-bar" style="width:${barWidth}%"></div></div>
+        </div>
+      `;
+      board.appendChild(row);
+    });
+
+    document.getElementById("tableWrap").style.display = "block";
+
+  } catch(e) {
+    document.getElementById("errorBox").textContent = "Error: " + e.message;
+    document.getElementById("errorBox").style.display = "block";
+  } finally {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("searchBtn").disabled = false;
+  }
+}
+
+document.getElementById("caInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") search();
+});
+</script>
+</body>
+</html>
