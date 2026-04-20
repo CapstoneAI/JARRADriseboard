@@ -1,8 +1,13 @@
 export default async function handler(req, res) {
-  const path = req.query.path || "";
-  const url = `https://public.rise.rich${path}`;
-  const r = await fetch(url, { headers: { "x-api-key": "fkv2e7h3c4l4k7y5" } });
-  const data = await r.json();
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.json(data);
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  const path = req.url.replace("/api/proxy", "");
+  const url = "https://public.rise.rich" + path;
+  try {
+    const r = await fetch(url, { headers: { "x-api-key": "fkv2e7h3c4l4k7y5" } });
+    const data = await r.json();
+    res.json(data);
+  } catch(e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
 }
