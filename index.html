@@ -193,7 +193,7 @@ async function loadData(){
     document.getElementById("floor").textContent="$"+parseFloat(m.mayflower_floor).toFixed(6);
     document.getElementById("mcap").textContent=fmtUsd(m.market_cap_usd);
     document.getElementById("holders").textContent=m.holders_count;
-    if(m.token_image)document.getElementById("tokenImg").src="/api/img?url="+encodeURIComponent(m.token_image);
+    if(m.token_image)const imgUrl=m.token_image.replace("https://ipfs.io/ipfs/","").replace("http://ipfs.io/ipfs/",""); document.getElementById("tokenImg").src="https://images.weserv.nl/?url="+encodeURIComponent("https://cloudflare-ipfs.com/ipfs/"+imgUrl)+"\document.getElementById("tokenImg").src="/api/img?url="+encodeURIComponent(m.token_image);w=100\document.getElementById("tokenImg").src="/api/img?url="+encodeURIComponent(m.token_image);h=100\document.getElementById("tokenImg").src="/api/img?url="+encodeURIComponent(m.token_image);fit=cover";
     const riseAddr=m.rise_market_address||ca;
     const ws={};
     let page=1,hasMore=true;
