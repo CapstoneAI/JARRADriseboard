@@ -11,7 +11,17 @@ body{background:linear-gradient(135deg,#f8d7c4 0%,#e8d5e8 50%,#c4c8e8 100%);min-
 .header h1{font-size:26px;font-weight:700;color:#2a2a3e}
 .header p{font-size:13px;color:#6b6b8a;margin-top:3px}
 .header p span{color:#9945ff;font-weight:500}
-.layout{display:grid;grid-template-columns:1fr 220px;gap:16px;max-width:920px;margin:0 auto;padding:0 16px 60px}
+.layout{display:grid;grid-template-columns:160px 1fr 220px;gap:16px;max-width:1100px;margin:0 auto;padding:0 16px 60px}
+.left-col{min-width:0}
+.left-title{font-size:12px;font-weight:600;color:#2a2a3e;margin-bottom:10px}
+.top-card{background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer}
+.top-card:hover{background:rgba(255,255,255,0.75)}
+.top-num{font-size:20px;font-weight:700;margin-bottom:4px}
+.top-name{font-size:12px;font-weight:700;color:#2a2a3e}
+.top-sym{font-size:10px;color:#9945ff;margin-bottom:6px}
+.top-label{font-size:10px;color:#8a8aaa}
+.top-val{font-size:12px;font-weight:600;color:#2a2a3e}
+.top-floor{font-size:11px;font-weight:600;color:#1D9E75}
 .main{min-width:0}
 .search-box{display:flex;gap:8px;margin-bottom:14px}
 input{flex:1;background:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.8);border-radius:10px;padding:12px 14px;font-size:14px;color:#2a2a3e;outline:none}
@@ -74,7 +84,7 @@ button:disabled{background:#c4b0e0;cursor:not-allowed}
 .disclaimer a{color:#9945ff;text-decoration:none;font-weight:500}
 .footer{text-align:center;padding:20px;font-size:11px;color:#8a8aaa}
 .footer a{color:#9945ff;text-decoration:none;font-weight:500}
-@media(max-width:640px){.layout{grid-template-columns:1fr}.sidebar{order:-1}}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.left-col{display:none}.sidebar{order:-1}}
 </style>
 </head>
 <body>
@@ -82,7 +92,15 @@ button:disabled{background:#c4b0e0;cursor:not-allowed}
   <h1>JARRAD RiseBoard</h1>
   <p>Holder leaderboard for <span>rise.rich</span> tokens</p>
 </div>
-<div style="max-width:920px;margin:0 auto;padding:0 16px 16px"><p style="font-size:13px;font-weight:600;color:#2a2a3e;margin-bottom:10px;">Top Market Cap</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="topMarkets"><div style="background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;text-align:center;color:#8a8aaa;">Loading...</div><div style="background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;text-align:center;color:#8a8aaa;">Loading...</div><div style="background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;text-align:center;color:#8a8aaa;">Loading...</div></div></div><div style="display:grid;grid-template-columns:160px 1fr 220px;gap:16px;max-width:1100px;margin:0 auto;padding:0 16px 60px"><div><p style="font-size:12px;font-weight:600;color:#2a2a3e;margin-bottom:10px;">Top Market Cap</p><div id="topMarkets" style="display:flex;flex-direction:column;gap:8px"><div style="background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;text-align:center;color:#8a8aaa;font-size:11px;">Loading...</div></div></div><div>
+<div class="layout">
+  <div class="left-col">
+    <div class="left-title">Top Market Cap</div>
+    <div id="topMarkets">
+      <div class="top-card"><div class="top-num" style="color:#B8860B">1</div><div class="top-name">Loading...</div></div>
+      <div class="top-card"><div class="top-num" style="color:#708090">2</div><div class="top-name">Loading...</div></div>
+      <div class="top-card"><div class="top-num" style="color:#A0522D">3</div><div class="top-name">Loading...</div></div>
+    </div>
+  </div>
   <div class="main">
     <div class="search-box">
       <input type="text" id="caInput" placeholder="Paste any rise.rich token CA..."/>
@@ -146,11 +164,7 @@ const PROXY="/api/proxy?path=";
 const JARRAD_CA="G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise";
 const MIN_MCAP=1000;
 const PAGE_SIZE=20;
-let currentCA="";
-let allHolders=[];
-let shownCount=0;
-let refreshTimer=null;
-let countdown=60;
+let currentCA="",allHolders=[],shownCount=0,refreshTimer=null,countdown=60;
 
 function fmt(n){if(n>=1000000)return(n/1000000).toFixed(2)+"M";if(n>=1000)return(n/1000).toFixed(1)+"K";return parseFloat(n).toFixed(0)}
 function fmtUsd(n){return"$"+parseFloat(n).toLocaleString("en",{maximumFractionDigits:0})}
@@ -175,14 +189,39 @@ async function loadJarrad(){
   }catch(e){}
 }
 
+async function loadTopMarkets(){
+  const gold=["#B8860B","#708090","#A0522D"];
+  try{
+    let all=[];
+    for(let p=1;p<=5;p++){
+      const r=await api("/markets?limit=200&page="+p);
+      if(!r.ok||!r.markets||r.markets.length===0)break;
+      all=all.concat(r.markets);
+      if(r.markets.length<200)break;
+    }
+    const top=all.sort((a,b)=>parseFloat(b.market_cap_usd)-parseFloat(a.market_cap_usd)).slice(0,3);
+    const el=document.getElementById("topMarkets");
+    el.innerHTML=top.map((m,i)=>`
+      <div class="top-card" onclick="document.getElementById('caInput').value='${m.rise_market_address}';doSearch();">
+        <div class="top-num" style="color:${gold[i]}">${i+1}</div>
+        <div class="top-name">${m.token_name}</div>
+        <div class="top-sym">$${m.token_symbol}</div>
+        <div class="top-label">Mkt Cap</div>
+        <div class="top-val">${fmtUsd(m.market_cap_usd)}</div>
+        <div class="top-label">Floor</div>
+        <div class="top-floor">$${parseFloat(m.mayflower_floor).toFixed(6)}</div>
+      </div>
+    `).join("");
+  }catch(e){}
+}
+
 async function loadData(){
   const ca=currentCA;
   document.getElementById("errorBox").style.display="none";
   document.getElementById("loading").style.display="block";
   document.getElementById("tokenInfo").style.display="none";
   document.getElementById("leaderboard").innerHTML="";
-  shownCount=0;
-  allHolders=[];
+  shownCount=0;allHolders=[];
   try{
     const mkt=await api("/markets/"+ca);
     if(!mkt.ok)throw new Error(mkt.error||"Token not found");
@@ -193,7 +232,6 @@ async function loadData(){
     document.getElementById("floor").textContent="$"+parseFloat(m.mayflower_floor).toFixed(6);
     document.getElementById("mcap").textContent=fmtUsd(m.market_cap_usd);
     document.getElementById("holders").textContent=m.holders_count;
-    if(m.token_image)if(m.token_image){ const hash=m.token_image.replace("https://ipfs.io/ipfs/","").replace("http://ipfs.io/ipfs/",""); document.getElementById("tokenImg").src="https://images.weserv.nl/?url=cloudflare-ipfs.com/ipfs/"+hash+"&w=100&h=100&fit=cover"; }
     const riseAddr=m.rise_market_address||ca;
     const ws={};
     let page=1,hasMore=true;
@@ -278,8 +316,7 @@ function doSearch(){
 }
 
 document.getElementById("caInput").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch()});
-window.onload=()=>{loadJarrad();loadTopMarkets();};
-async function loadTopMarkets(){var gold=["#B8860B","#708090","#A0522D"];var nums=["1","2","3"];try{var r=await api("/markets?limit=200/markets?limit=50&page=1page=1");if(!r.ok||!r.markets)return;var s=r.markets.sort(function(a,b){return parseFloat(b.market_cap_usd)-parseFloat(a.market_cap_usd)}).slice(0,3);var el=document.getElementById("topMarkets");el.innerHTML=s.map(function(m,i){return "<div onclick=\"document.getElementById(47caInput47).value=47"+m.rise_market_address+"47;doSearch();\" style=\"background:rgba(255,255,255,0.55);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.8);cursor:pointer;\"><div style=\"font-size:22px;font-weight:700;color:"+gold[i]+";margin-bottom:6px;\">"+nums[i]+"</div><div style=\"font-size:13px;font-weight:700;color:#2a2a3e;\">"+m.token_name+"</div><div style=\"font-size:11px;color:#9945ff;margin-bottom:8px;\">$"+m.token_symbol+"</div><div style=\"font-size:11px;color:#8a8aaa;\">Mkt Cap</div><div style=\"font-size:13px;font-weight:600;color:#2a2a3e;margin-bottom:4px;\">"+fmtUsd(m.market_cap_usd)+"</div><div style=\"font-size:11px;color:#8a8aaa;\">Floor</div><div style=\"font-size:12px;font-weight:600;color:#1D9E75;\">$"+parseFloat(m.mayflower_floor).toFixed(6)+"</div></div>";}).join("");}catch(e){}}
+window.onload=()=>{loadJarrad();loadTopMarkets();}
 </script>
 </body>
 </html>
