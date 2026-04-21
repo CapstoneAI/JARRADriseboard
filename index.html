@@ -226,7 +226,7 @@ async function loadData(){
     const mkt=await api("/markets/"+ca);
     if(!mkt.ok)throw new Error(mkt.error||"Token not found");
     const m=mkt.market;
-    if(parseFloat(m.market_cap_usd)<MIN_MCAP)throw new Error("Market cap below $1,000");
+    
     document.getElementById("tokenName").textContent=m.token_name;
     document.getElementById("tokenSym").textContent="$"+m.token_symbol+" · rise.rich";
     document.getElementById("floor").textContent="$"+parseFloat(m.mayflower_floor).toFixed(6);
