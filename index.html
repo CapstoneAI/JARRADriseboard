@@ -247,7 +247,7 @@ async function loadData(){
       });
       if(tx.transactions.length<100)hasMore=false;
       page++;
-      if(page>10)break;
+      if(page>30)break;
     }
     const supply=parseFloat(m.mayflower_token_supply)/Math.pow(10,m.token_decimals||9);
     allHolders=Object.keys(ws).map(w=>{
