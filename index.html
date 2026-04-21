@@ -11,7 +11,7 @@ body{background:linear-gradient(135deg,#f8d7c4 0%,#e8d5e8 50%,#c4c8e8 100%);min-
 .header h1{font-size:26px;font-weight:700;color:#2a2a3e}
 .header p{font-size:13px;color:#6b6b8a;margin-top:3px}
 .header p span{color:#9945ff;font-weight:500}
-.layout{display:grid;grid-template-columns:160px 1fr 220px;gap:16px;max-width:1100px;margin:0 auto;padding:0 16px 60px}
+.layout{display:grid;grid-template-columns:200px 1fr 220px;gap:16px;max-width:1100px;margin:0 auto;padding:0 16px 60px}
 .left-col{min-width:0}
 .left-title{font-size:12px;font-weight:600;color:#2a2a3e;margin-bottom:10px}
 .top-card{background:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.8);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer}
@@ -96,9 +96,9 @@ button:disabled{background:#c4b0e0;cursor:not-allowed}
   <div class="left-col">
     <div class="left-title">Top Market Cap</div>
     <div id="topMarkets">
-      <div class="top-card"><div class="top-num" style="color:#B8860B">1</div><div class="top-name">Loading...</div></div>
-      <div class="top-card"><div class="top-num" style="color:#708090">2</div><div class="top-name">Loading...</div></div>
-      <div class="top-card"><div class="top-num" style="color:#A0522D">3</div><div class="top-name">Loading...</div></div>
+      <div class="top-card" style="padding:16px"><div class="top-num" style="color:#B8860B">1</div><div class="top-name">Loading...</div></div>
+      <div class="top-card" style="padding:16px"><div class="top-num" style="color:#708090">2</div><div class="top-name">Loading...</div></div>
+      <div class="top-card" style="padding:16px"><div class="top-num" style="color:#A0522D">3</div><div class="top-name">Loading...</div></div>
     </div>
   </div>
   <div class="main">
@@ -202,7 +202,7 @@ async function loadTopMarkets(){
     const top=all.sort((a,b)=>parseFloat(b.market_cap_usd)-parseFloat(a.market_cap_usd)).slice(0,3);
     const el=document.getElementById("topMarkets");
     el.innerHTML=top.map((m,i)=>`
-      <div class="top-card" onclick="document.getElementById('caInput').value='${m.rise_market_address}';doSearch();">
+      <div class="top-card" style="padding:16px" onclick="document.getElementById('caInput').value='${m.rise_market_address}';doSearch();">
         <img src="${["https://i.postimg.cc/W3QC1wdj/never.png","https://i.postimg.cc/9Fx0gDSs/ant.png","https://i.postimg.cc/3WQTVB3S/cluth.png"][i]}" style="width:44px;height:44px;border-radius:6px;object-fit:cover;margin-bottom:6px;display:block;"><div class="top-num" style="color:${gold[i]}">${i+1}</div>
         <div class="top-name">${m.token_name}</div>
         <div class="top-sym">$${m.token_symbol}</div>
