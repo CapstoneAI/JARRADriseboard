@@ -204,7 +204,7 @@ async function loadData(){
         const w=t.wallet_address;
         if(!ws[w])ws[w]={bought:0,sold:0,borrow:0};
         if(t.transaction_type==="buy")ws[w].bought+=parseFloat(t.amount_received||0)/1e9;
-        if(t.transaction_type==="sell")ws[w].sold+=parseFloat(t.amount_received||0)/1e9;
+        if(t.transaction_type==="sell")ws[w].sold+=parseFloat(t.amount_put||0)/1e9;
         if(t.transaction_type==="borrow")ws[w].borrow+=parseFloat(t.amount_put||0);
       });
       if(tx.transactions.length<100)hasMore=false;
