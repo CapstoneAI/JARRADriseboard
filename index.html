@@ -266,8 +266,8 @@ async function loadData(){
       const borrowSol=s.borrow>0?(s.borrow/1e9).toFixed(2):null;
       return{wallet:w,tokens,soldPct,borrowSol,pct:totalSupply>0?(tokens/totalSupply*100):0};
     }).filter(h=>h.tokens>0).sort((a,b)=>b.tokens-a.tokens);
-    renderRows(PAGE_SIZE);
     renderDevRow();
+    renderRows(PAGE_SIZE);
     document.getElementById("tokenInfo").style.display="block";
     startCountdown();
   }catch(e){
