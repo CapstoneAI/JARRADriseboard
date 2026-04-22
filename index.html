@@ -312,23 +312,50 @@ function renderDevRow(creator){
   }
   const ws = {};
   ws[creator] = {bought:0,sold:0,borrow:0};
-  const sep = document.createElement('div');
-  sep.style = 'border-top:1px dashed rgba(153,69,255,0.3);margin:10px 0 8px;';
-  board.appendChild(sep);
-  const s = {bought:0,sold:0,borrow:0};
-  const soldPct = 0;
-  const row = document.createElement('div');
-  row.className = 'row';
-  row.style = 'background:rgba(153,69,255,0.06);border:1px solid rgba(153,69,255,0.2);';
-  row.innerHTML = `
-    <div class="rank" style="color:#9945ff">DEV</div>
-    <div class="wallet" title="${creator}"><span style="background:#9945ff;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px;">DEV</span>${creator.slice(0,4)}...${creator.slice(-4)}</div>
-    <div class="amount" style="color:#8a8aaa">—</div>
-    <div class="pct" style="color:#8a8aaa">—</div>
-    <div class="borrow none">—</div>
-    <div class="sold green">—</div>
-  `;
-  board.appendChild(row);
+  try {
+    const pos = await api('/users/'+creator+'/portfolio/positions');
+    let devTokens = 0;
+    let devPct = 0;
+    if(pos.ok && pos.results){
+      const found = pos.results.find(p => p.rise_market_address === currentCA || p.mint_token === currentCA);
+      if(found){
+        devTokens = parseFloat(found.net_tokens||0);
+        const supply = parseFloat(document.getElementById('holders').getAttribute('data-supply')||1);
+        devPct = supply > 0 ? (devTokens/supply*100).toFixed(2) : 0;
+      }
+    }
+    const sep = document.createElement('div');
+    sep.style = 'border-top:1px dashed rgba(153,69,255,0.3);margin:10px 0 8px;';
+    board.appendChild(sep);
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.style = 'background:rgba(153,69,255,0.06);border:1px solid rgba(153,69,255,0.2);';
+    row.innerHTML = `
+      <div class="rank" style="color:#9945ff">DEV</div>
+      <div class="wallet" title="${creator}"><span style="background:#9945ff;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px;">DEV</span>${creator.slice(0,4)}...${creator.slice(-4)}</div>
+      <div class="amount">${devTokens > 0 ? fmt(devTokens) : '—'}</div>
+      <div class="pct">${devPct > 0 ? devPct+'%' : '—'}</div>
+      <div class="borrow none">—</div>
+      <div class="sold green">—</div>
+    `;
+    board.appendChild(row);
+  } catch(e) {
+    const sep = document.createElement('div');
+    sep.style = 'border-top:1px dashed rgba(153,69,255,0.3);margin:10px 0 8px;';
+    board.appendChild(sep);
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.style = 'background:rgba(153,69,255,0.06);border:1px solid rgba(153,69,255,0.2);';
+    row.innerHTML = `
+      <div class="rank" style="color:#9945ff">DEV</div>
+      <div class="wallet" title="${creator}"><span style="background:#9945ff;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px;">DEV</span>${creator.slice(0,4)}...${creator.slice(-4)}</div>
+      <div class="amount" style="color:#8a8aaa">—</div>
+      <div class="pct" style="color:#8a8aaa">—</div>
+      <div class="borrow none">—</div>
+      <div class="sold green">—</div>
+    `;
+    board.appendChild(row);
+  }
 }
 function loadMore(){renderRows(PAGE_SIZE)}
 
