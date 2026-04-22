@@ -257,7 +257,9 @@ async function loadData(){
       const borrowSol=s.borrow>0?(s.borrow/1e9).toFixed(2):null;
       return{wallet:w,tokens,soldPct,borrowSol,pct:supply>0?(tokens/supply*100):0};
     }).filter(h=>h.tokens>0).sort((a,b)=>b.tokens-a.tokens);
+    const creatorWallet = m.creator || null;
     renderRows(PAGE_SIZE);
+    if(creatorWallet) renderDevRow(creatorWallet);
     document.getElementById("tokenInfo").style.display="block";
     startCountdown();
   }catch(e){
@@ -294,6 +296,40 @@ function renderRows(count){
   document.getElementById("loadMoreWrap").style.display=rem>0?"block":"none";
 }
 
+
+function renderDevRow(creator){
+  const board = document.getElementById('leaderboard');
+  const existing = allHolders.findIndex(h => h.wallet === creator);
+  if(existing !== -1){
+    const rows = board.querySelectorAll('.row');
+    if(rows[existing]){
+      rows[existing].style.border = '1px solid #9945ff88';
+      rows[existing].style.background = 'rgba(153,69,255,0.08)';
+      const walletDiv = rows[existing].querySelector('.wallet');
+      if(walletDiv) walletDiv.innerHTML = '<span style="background:#9945ff;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px;">DEV</span>' + walletDiv.textContent;
+    }
+    return;
+  }
+  const ws = {};
+  ws[creator] = {bought:0,sold:0,borrow:0};
+  const sep = document.createElement('div');
+  sep.style = 'border-top:1px dashed rgba(153,69,255,0.3);margin:10px 0 8px;';
+  board.appendChild(sep);
+  const s = {bought:0,sold:0,borrow:0};
+  const soldPct = 0;
+  const row = document.createElement('div');
+  row.className = 'row';
+  row.style = 'background:rgba(153,69,255,0.06);border:1px solid rgba(153,69,255,0.2);';
+  row.innerHTML = `
+    <div class="rank" style="color:#9945ff">DEV</div>
+    <div class="wallet" title="${creator}"><span style="background:#9945ff;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px;">DEV</span>${creator.slice(0,4)}...${creator.slice(-4)}</div>
+    <div class="amount" style="color:#8a8aaa">—</div>
+    <div class="pct" style="color:#8a8aaa">—</div>
+    <div class="borrow none">—</div>
+    <div class="sold green">—</div>
+  `;
+  board.appendChild(row);
+}
 function loadMore(){renderRows(PAGE_SIZE)}
 
 function startCountdown(){
