@@ -198,7 +198,7 @@ async function loadJarrad(){
 
 async function loadTopMarkets(){
   const gold=["#B8860B","#708090","#A0522D"];
-  const imgs=["https://i.postimg.cc/W3QC1wdj/never.png","https://i.postimg.cc/9Fx0gDSs/ant.png","https://i.postimg.cc/3WQTVB3S/cluth.png"];
+  const tokenImgs={"NEVERZERO":"https://i.postimg.cc/W3QC1wdj/never.png","ANT":"https://i.postimg.cc/9Fx0gDSs/ant.png","CLUTCH":"https://i.postimg.cc/3WQTVB3S/cluth.png"};
   try{
     let all=[];
     for(let p=1;p<=5;p++){
@@ -211,7 +211,7 @@ async function loadTopMarkets(){
     const el=document.getElementById("topMarkets");
     el.innerHTML=top.map((m,i)=>`
       <div class="top-card" onclick="document.getElementById('caInput').value='${m.rise_market_address}';doSearch();">
-        <img class="top-img" src="${imgs[i]}" onerror="this.style.display='none'" />
+        <img class="top-img" src="${tokenImgs[m.token_symbol]||''}" onerror="this.style.display='none'" />
         <div class="top-num" style="color:${gold[i]}">${i+1}</div>
         <div class="top-name">${m.token_name}</div>
         <div class="top-sym">$${m.token_symbol}</div>
