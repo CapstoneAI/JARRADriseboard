@@ -246,7 +246,7 @@ async function loadData(){
     const ws={};
     let page=1,hasMore=true;
     while(hasMore){
-      const tx=await api("/markets/"+riseAddr+"/transactions?limit=5000&page="+page);
+      const tx=await api("/markets/"+riseAddr+"/transactions?limit=4000&page="+page);
       if(!tx.ok||!tx.transactions||tx.transactions.length===0)break;
       tx.transactions.forEach(t=>{
         const w=t.wallet_address;
