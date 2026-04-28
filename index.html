@@ -357,7 +357,7 @@ function loadMore(){renderRows(PAGE_SIZE)}
 function startCountdown(){
   if(refreshTimer)clearInterval(refreshTimer);
   countdown=60;
-  if(false&&refreshTimer){//
+  if(refreshTimer){
     countdown--;
     
     if(countdown<=0){countdown=60;loadData();}
