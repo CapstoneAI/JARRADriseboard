@@ -290,7 +290,7 @@ function renderRows(count){
     const row=document.createElement("div");
     row.className="row"+(isdev?" dev-row":"");
     row.innerHTML=`
-      <div class="rank ${rankCls(i)}">${i+1}</div>
+      <div class="rank ${rankCls(i)}">${isdev?"":i+1}</div>
       <div class="wallet" title="${h.wallet}">${isdev?'<span class="dev-badge">DEV</span>':''}<span>${shortW(h.wallet)}</span></div>
       <div class="amount">${fmt(h.tokens)}</div>
       <div class="pct">${h.pct.toFixed(2)}%<div class="bar-wrap"><div class="bar" style="width:${barW}%"></div></div></div>
@@ -357,10 +357,7 @@ function loadMore(){renderRows(PAGE_SIZE)}
 function startCountdown(){
   if(refreshTimer)clearInterval(refreshTimer);
   countdown=60;
-  refreshTimer=setInterval(()=>{
-    countdown--;
-    if(countdown<=0){countdown=60;loadData();}
-  },1000);
+  refreshTimer=/* auto-refresh rimosso */;
 }
 
 function doSearch(){
