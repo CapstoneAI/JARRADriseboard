@@ -245,36 +245,19 @@ async function loadData(){
     const riseAddr=m.rise_market_address||ca;
     const ws={};
     let page=1,hasMore=true;
-    // helper render progressivo
-    const flushRender=async()=>{
-      allHolders=Object.keys(ws).map(w=>{
-        const s=ws[w];
-        const tokens=Math.max(0,s.bought-s.sold);
-        const soldPct=s.bought>0?Math.round((s.sold/s.bought)*100):0;
-        const borrowSol=s.borrow>0?(s.borrow/1e9).toFixed(2):null;
-        return{wallet:w,tokens,soldPct,borrowSol,pct:totalSupply>0?(tokens/totalSupply*100):0};
-      }).filter(h=>h.tokens>0).sort((a,b)=>b.tokens-a.tokens);
-      var _di=allHolders.findIndex(h=>devWallet&&h.wallet===devWallet);
-      if(_di>0){allHolders.unshift(allHolders.splice(_di,1)[0]);}
-      await renderDevRow();
-      renderRows(PAGE_SIZE);
-    };
-    const BATCH=5;
     while(hasMore){
       const tx=await api("/markets/"+riseAddr+"/transactions?limit=200&page="+page);
-      if(!tx.ok||!tx.transactions||tx.transactions.length==0)break;
+      if(!tx.ok||!tx.transactions||tx.transactions.length===0)break;
       tx.transactions.forEach(t=>{
         const w=t.wallet_address;
         if(!ws[w])ws[w]={bought:0,sold:0,borrow:0};
         if(t.transaction_type==="buy")ws[w].bought+=parseFloat(t.amount_received||0)/1e9;
         if(t.transaction_type==="sell")ws[w].sold+=parseFloat(t.amount_put||0)/1e9;
-        if(t.transaction_type==="borrow")ws[w].borrow+=parseFloat(t.amount_put||0)/1e9;
+        if(t.transaction_type==="borrow")ws[w].borrow+=parseFloat(t.amount_put||0);
       });
       if(tx.transactions.length<100)hasMore=false;
       page++;
       if(page>30)break;
-      if(page%BATCH===1)await flushRender();
-    }
     }
     allHolders=Object.keys(ws).map(w=>{
       const s=ws[w];
