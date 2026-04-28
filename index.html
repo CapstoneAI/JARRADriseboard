@@ -212,7 +212,7 @@ async function loadTopMarkets(){
     el.innerHTML=top.map((m,i)=>`
       <div class="top-card" onclick="document.getElementById('caInput').value='${m.rise_market_address}';doSearch();">
         <img class="top-img" src="${tokenImgs[m.token_symbol]||''}" onerror="this.style.display='none'" />
-        <div class="top-num" style="color:${gold[i]}">${i+1}</div>
+        <div class="top-num" style="color:${gold[i]}">${h._isDev?"DEV":i+1}</div>
         <div class="top-name">${m.token_name}</div>
         <div class="top-sym">$${m.token_symbol}</div>
         <div class="top-label">Mkt Cap</div>
