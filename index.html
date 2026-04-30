@@ -235,7 +235,7 @@ async function loadData(){
     const mkt=await api("/markets/"+ca);
     // carica dati Helius on-chain (staked tokens)
     fetch('/api/helius?mint='+ca).then(r=>r.json()).then(d=>{
-      if(d.ok)d.holders.forEach(h=>{heliusData[h.wallet]={amount:h.amount,delegated:h.delegated,frozen:h.frozen};});
+      if(d.ok){d.holders.forEach(h=>{heliusData[h.wallet]={amount:h.amount,delegated:h.delegated,frozen:h.frozen};});renderRows(shownCount);}
     }).catch(()=>{});
     if(!mkt.ok)throw new Error(mkt.error||"Token not found");
     const m=mkt.market;
