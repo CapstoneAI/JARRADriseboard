@@ -171,7 +171,7 @@ button:disabled{background:#c4b0e0;cursor:not-allowed}
 const PROXY="/api/proxy?path=";
 const JARRAD_CA="G1GjqZRcPg3fdBzYs8mGSLuTmFGmX549BX3Cj1v1rise";
 const PAGE_SIZE=20;
-let currentCA="",allHolders=[],shownCount=0,refreshTimer=null,countdown=60,devWallet=null,totalSupply=0;
+let currentCA="",allHolders=[],shownCount=0,refreshTimer=null,countdown=60,devWallet=null,totalSupply=0,heliusData={};
 
 function fmt(n){if(n>=1000000)return(n/1000000).toFixed(2)+"M";if(n>=1000)return(n/1000).toFixed(1)+"K";return parseFloat(n).toFixed(0)}
 function fmtUsd(n){return"$"+parseFloat(n).toLocaleString("en",{maximumFractionDigits:0})}
@@ -233,6 +233,10 @@ async function loadData(){
   shownCount=0;allHolders=[];devWallet=null;
   try{
     const mkt=await api("/markets/"+ca);
+    // carica dati Helius on-chain (staked tokens)
+    fetch('/api/helius?mint='+ca).then(r=>r.json()).then(d=>{
+      if(d.ok)d.holders.forEach(h=>{heliusData[h.wallet]={amount:h.amount,delegated:h.delegated,frozen:h.frozen};});
+    }).catch(()=>{});
     if(!mkt.ok)throw new Error(mkt.error||"Token not found");
     const m=mkt.market;
     devWallet=m.creator||null;
