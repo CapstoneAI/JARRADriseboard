@@ -300,6 +300,7 @@ function renderRows(count){
       <div class="wallet" title="${h.wallet}">${isdev?'<span class="dev-badge">DEV</span>':''}<span>${shortW(h.wallet)}</span></div>
       <div class="amount">${fmt(h.tokens)}</div>
       <div class="pct">${h.pct.toFixed(2)}%<div class="bar-wrap"><div class="bar" style="width:${barW}%"></div></div></div>
+      <div class="staked">${(()=>{const hd=heliusData[h.wallet];return hd&&hd.delegated>0?Math.round(hd.delegated/1e9).toLocaleString()+' 🔒':'—';})()}</div>
       <div class="borrow ${h.borrowSol?'':'none'}">${h.borrowSol?h.borrowSol+" SOL":"—"}</div>
       <div class="sold ${soldCls(h.soldPct)}">${h.soldPct}%</div>
     `;
